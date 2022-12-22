@@ -6,8 +6,10 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +30,10 @@ public class PublisherRepositoryImpl implements PublisherRepository {
 
 	@Override
 	public Stream<Publisher> findDistinctByBooksAuthorsName(String authorName) {
-		// TODO Auto-generated method stub
-		return null;
+		TypedQuery<Publisher> query = em.createQuery("select distinct p.publisherName from Book b join b.authors a join b.publisher p where a.name=?1", Publisher.class);
+		query.setParameter(1, authorName);
+	   
+		return query.getResultStream();
 	}
 
 	@Override
